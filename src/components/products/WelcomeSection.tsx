@@ -1,11 +1,12 @@
 import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 const MAIN_IMAGE = "/images/sunset.jpg";
 const SECONDARY_IMAGE = "/images/gift.jpg";
 const FALLBACK_IMAGE = "/images/sunset.jpg";
-const PRODUCTS_ID = "products";
 
 function WelcomeSection() {
+  const navigate = useNavigate();
   const sectionRef = useRef<HTMLElement | null>(null);
   const frameRef = useRef<number | null>(null);
 
@@ -66,9 +67,14 @@ function WelcomeSection() {
   }
 
   function handleViewProducts() {
+    if (window.location.pathname === "/products") {
     document
-      .getElementById(PRODUCTS_ID)
-      ?.scrollIntoView({ behavior: "smooth" });
+      .getElementById("our-gifts")
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+
+    return;
+  }
+    navigate("/products#our-gifts");
   }
 
   return (
@@ -703,39 +709,32 @@ function WelcomeSection() {
           }
 
           .marketplace-editorial__title {
-            font-size: clamp(62px, 21vw, 96px);
+            font-size: clamp(56px, 18vw, 88px);
 
             letter-spacing: -0.04em;
           }
 
           .marketplace-editorial__main-image {
-            width: 100%;
+            width: min(72%, 340px);
+            height: min(54vw, 300px);
 
-            height: min(70vw, 330px);
+            margin: 18px 0 0 auto;
 
-            margin-top: 18px;
-
-            border-radius: 27px;
+            border-radius: 24px;
           }
 
           .marketplace-editorial__intro {
             width: 100%;
 
-            margin-top: 29px;
+            margin-top: 22px;
 
             padding: 0;
 
-            display: grid;
-
-            grid-template-columns:
-              1fr
-              1.25fr;
-
-            gap: 28px;
+            display: block;
           }
 
           .marketplace-editorial__eyebrow {
-            margin: 0;
+            margin: 0 0 18px;
           }
 
           .marketplace-editorial__products-button {
@@ -743,29 +742,30 @@ function WelcomeSection() {
           }
 
           .marketplace-editorial__side-panel {
-            width: 100%;
+            width: min(100%, 360px);
 
-            margin-top: 48px;
+            margin-top: 22px;
+            margin-left: 0;
           }
 
           .marketplace-editorial__secondary-image {
-            height: min(51vw, 245px);
+            height: min(46vw, 220px);
 
-            border-radius: 27px;
+            border-radius: 24px;
           }
 
           .marketplace-editorial__side-copy {
-            padding-top: 22px;
+            padding-top: 18px;
           }
 
           .marketplace-editorial__heading {
-            font-size: clamp(42px, 11vw, 58px);
+            font-size: clamp(36px, 10vw, 52px);
           }
 
           .marketplace-editorial__description {
-            max-width: 88%;
+            max-width: none;
 
-            margin-top: 22px;
+            margin-top: 18px;
           }
 
           .marketplace-editorial__eyebrow,

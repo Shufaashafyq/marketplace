@@ -33,13 +33,13 @@ function AdminSidebar() {
   const { logout } = useAuth();
 
   return (
-    <aside className="sticky top-0 flex h-[calc(100vh-4rem)] w-60 shrink-0 flex-col border-r border-[#E8DCEB] bg-white">
-      <div className="flex-1 overflow-y-auto px-4 py-6">
-        <p className="px-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#A290B7]">
+    <aside className="border-b border-[#E8DCEB] bg-white sm:sticky sm:top-0 sm:h-[calc(100vh-4rem)] sm:w-60 sm:shrink-0 sm:border-b-0 sm:border-r">
+      <div className="overflow-x-auto px-3 py-3 sm:h-full sm:flex-1 sm:overflow-y-auto sm:px-4 sm:py-6">
+        <p className="px-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#A290B7] sm:px-3">
           Management
         </p>
 
-        <nav className="mt-4 space-y-1">
+        <nav className="mt-3 flex gap-2 overflow-x-auto pb-1 sm:mt-4 sm:block sm:space-y-1 sm:overflow-visible sm:pb-0">
           {navigation.map((item) => {
             const Icon = item.icon;
 
@@ -49,7 +49,7 @@ function AdminSidebar() {
                 to={item.path}
                 end={item.end}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors ${
+                  `flex min-w-max items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors ${
                     isActive
                       ? "bg-[#F3EAF5] font-medium text-[#560319]"
                       : "text-[#8F8585] hover:bg-[#FAF6F6] hover:text-[#560319]"
@@ -64,7 +64,7 @@ function AdminSidebar() {
         </nav>
       </div>
 
-      <div className="border-t border-[#E8DCEB] px-4 pb-7 pt-4">
+      <div className="border-t border-[#E8DCEB] px-3 pb-3 pt-3 sm:px-4 sm:pb-7 sm:pt-4">
         <button
           type="button"
           onClick={async () => {

@@ -1,7 +1,8 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
+  Banknote,
   ShoppingCart,
   Trash2,
   Plus,
@@ -10,6 +11,8 @@ import {
 import DashboardHeader from "../components/layout/DashboardHeader";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
+import ClearCartDialog from "../components/cart/ClearCartDialog";
+import { formatMVR, formatMVRSymbol, formatMVRAmount } from "../lib/formatCurrency";
 
 function CartPage() {
   const {
@@ -22,6 +25,7 @@ function CartPage() {
 
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [clearCartOpen, setClearCartOpen] = useState(false);
 
   useEffect(() => {
     if (!user) {
@@ -60,24 +64,24 @@ function CartPage() {
       <DashboardHeader onFilterClick={handleFilterClick} />
 
       <main className="min-h-screen bg-linear-to-br from-[#F9F6FB] to-[#F3EDF5]">
-        <div className="mx-auto max-w-6xl px-5 py-12">
+        <div className="mx-auto max-w-6xl px-4 py-8 sm:px-5 sm:py-12">
           <button
             type="button"
             onClick={() => navigate("/products#our-gifts")}
-            className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-[#560319] transition-colors hover:text-[#946D6D]"
+            className="mb-6 inline-flex items-center gap-2 text-sm font-medium text-[#560319] transition-colors hover:text-[#946D6D] sm:mb-8"
           >
             <ArrowLeft size={16} />
             Back to gifts
           </button>
 
           {/* Header */}
-          <div className="mb-12 flex items-center gap-3">
+          <div className="mb-8 flex items-center gap-3 sm:mb-12">
             <ShoppingCart
-              size={32}
-              className="text-[#560319]"
+              size={28}
+              className="text-[#560319] sm:h-8 sm:w-8"
             />
 
-            <h1 className="text-4xl font-bold text-[#560319]">
+            <h1 className="text-3xl font-bold text-[#560319] sm:text-4xl">
               Shopping Cart
             </h1>
           </div>
@@ -104,9 +108,17 @@ function CartPage() {
               <p className="text-sm text-[#A290B7]">
                 Add some products to get started!
               </p>
+
+              <button
+                type="button"
+                onClick={() => navigate("/products#our-gifts")}
+                className="mt-6 rounded-lg bg-[#560319] px-6 py-2 font-medium text-[#FDF4D2] transition-opacity hover:opacity-80"
+              >
+                Browse products
+              </button>
             </div>
           ) : (
-            <div className="grid gap-8 lg:grid-cols-3">
+            <div className="grid gap-6 lg:grid-cols-3 lg:gap-8">
               {/* Cart Items */}
               <div className="lg:col-span-2">
                 <div className="space-y-4">
@@ -119,7 +131,7 @@ function CartPage() {
                     return (
                       <div
                         key={item.id}
-                        className="flex gap-4 rounded-xl border border-[#E8DCEB]/80 bg-white/70 p-4 backdrop-blur-xl"
+                        className="flex flex-col gap-4 rounded-xl border border-[#E8DCEB]/80 bg-white/70 p-3 backdrop-blur-xl sm:flex-row sm:p-4"
                       >
                         {/* Product Image */}
                         <div className="h-24 w-24 shrink-0 overflow-hidden rounded-lg bg-[#F3EDF5]">
@@ -137,9 +149,9 @@ function CartPage() {
                         </div>
 
                         {/* Product Info */}
-                        <div className="flex flex-1 flex-col justify-between">
+                        <div className="flex flex-1 flex-col justify-between gap-3">
                           <div>
-                            <h3 className="cursor-pointer font-medium text-[#560319] transition-opacity hover:opacity-70">
+                            <h3 className="cursor-pointer text-base font-medium text-[#560319] transition-opacity hover:opacity-70 sm:text-lg">
                               {item.product.name}
                             </h3>
 
@@ -148,12 +160,21 @@ function CartPage() {
                             </p>
                           </div>
 
-                          <div className="flex items-center justify-between">
-                            <p className="font-semibold text-[#560319]">
-                              ${item.product.price}
-                            </p>
+                          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                            <div className="flex items-baseline gap-1.5">
+                              <Banknote
+                                size={15}
+                                strokeWidth={1.8}
+                                className="shrink-0 translate-y-px text-emerald-700/55"
+                              />
+                              <span className="text-[15px] italic font-medium text-emerald-700/65">
+                                {formatMVRSymbol(item.product.price)}
+                              </span>
+                              <span className="text-[15px] font-semibold text-[#560319] tabular-nums">
+                                {formatMVRAmount(item.product.price)}
+                              </span>
+                            </div>
 
-                            {/* Quantity Controls */}
                             <div className="flex items-center gap-2">
                               <button
                                 type="button"
@@ -188,13 +209,10 @@ function CartPage() {
                               </button>
                             </div>
 
-                            {/* Remove Button */}
                             <button
                               type="button"
-                              onClick={() =>
-                                removeItem(item.productId)
-                              }
-                              className="flex h-8 w-8 items-center justify-center text-[#946D6D] transition-all hover:scale-110 hover:text-red-600"
+                              onClick={() => removeItem(item.productId)}
+                              className="flex h-8 w-8 items-center justify-center self-end text-[#946D6D] transition-all hover:scale-110 hover:text-red-600 sm:self-auto"
                               aria-label="Remove from cart"
                             >
                               <Trash2 size={18} />
@@ -203,19 +221,23 @@ function CartPage() {
                         </div>
 
                         {/* Item Total */}
-                        <div className="flex flex-col items-end justify-center">
-                          <p className="text-lg font-semibold text-[#560319]">
-                            $
-                            {(
-                              parseFloat(
-                                item.product.price
-                              ) * item.quantity
-                            ).toFixed(2)}
-                          </p>
+                        <div className="flex items-center justify-between border-t border-[#E8DCEB]/70 pt-2 sm:block sm:border-t-0 sm:pt-0 sm:text-right">
+                          <div className="flex items-baseline gap-1.5">
+                            <Banknote
+                              size={15}
+                              strokeWidth={1.8}
+                              className="shrink-0 translate-y-px text-emerald-700/55"
+                            />
+                            <span className="text-[15px] italic font-medium text-emerald-700/65">
+                              {formatMVRSymbol(Number(item.product.price) * item.quantity)}
+                            </span>
+                            <span className="text-[15px] font-semibold text-[#560319] tabular-nums">
+                              {formatMVRAmount(Number(item.product.price) * item.quantity)}
+                            </span>
+                          </div>
 
                           <p className="text-xs text-[#A290B7]">
-                            {item.quantity} × $
-                            {item.product.price}
+                            {item.quantity} × {formatMVR(item.product.price)}
                           </p>
                         </div>
                       </div>
@@ -226,15 +248,15 @@ function CartPage() {
 
               {/* Order Summary */}
               <div className="lg:col-span-1">
-                <div className="sticky top-24 rounded-xl border border-[#E8DCEB]/80 bg-white/70 p-6 backdrop-blur-xl">
-                  <h2 className="mb-6 text-xl font-semibold text-[#560319]">
+                <div className="sticky top-24 rounded-xl border border-[#E8DCEB]/80 bg-white/70 p-4 backdrop-blur-xl sm:p-6">
+                  <h2 className="mb-5 text-xl font-semibold text-[#560319] sm:mb-6">
                     Order Summary
                   </h2>
 
                   <div className="space-y-4">
                     <div className="flex justify-between text-[#946D6D]">
                       <span>Subtotal</span>
-                      <span>${subtotal.toFixed(2)}</span>
+                      <span>{formatMVR(subtotal)}</span>
                     </div>
 
                     <div className="flex justify-between text-[#946D6D]">
@@ -250,7 +272,7 @@ function CartPage() {
                     <div className="border-t border-[#E8DCEB] pt-4">
                       <div className="mb-6 flex justify-between text-lg font-semibold text-[#560319]">
                         <span>Total</span>
-                        <span>${subtotal.toFixed(2)}</span>
+                        <span>{formatMVR(subtotal)}</span>
                       </div>
 
                       <button
@@ -260,10 +282,9 @@ function CartPage() {
                         Proceed to Checkout
                       </button>
 
-                      {/* Clear Cart */}
                       <button
                         type="button"
-                        onClick={clear}
+                        onClick={() => setClearCartOpen(true)}
                         className="w-full rounded-lg px-4 py-3 font-semibold text-[#946D6D] transition-opacity hover:text-red-600"
                       >
                         Clear Cart
@@ -276,6 +297,12 @@ function CartPage() {
           )}
         </div>
       </main>
+
+      <ClearCartDialog
+        open={clearCartOpen}
+        onOpenChange={setClearCartOpen}
+        onConfirm={clear}
+      />
     </>
   );
 }

@@ -30,25 +30,25 @@ function WishlistPage() {
       <DashboardHeader onFilterClick={handleFilterClick} />
 
       <main className="min-h-screen bg-linear-to-br from-[#F9F6FB] via-transparent to-[#F3EDF5]">
-        <div className="mx-auto max-w-6xl px-5 py-12">
+        <div className="mx-auto max-w-6xl px-4 py-8 sm:px-5 sm:py-12">
           <button
             type="button"
             onClick={() => navigate("/products#our-gifts")}
-            className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-[#560319] transition-colors hover:text-[#946D6D]"
+            className="mb-6 inline-flex items-center gap-2 text-sm font-medium text-[#560319] transition-colors hover:text-[#946D6D] sm:mb-8"
           >
             <ArrowLeft size={16} />
             Back to gifts
           </button>
 
           {/* Header */}
-          <div className="mb-12 flex items-center gap-3">
+          <div className="mb-8 flex items-center gap-3 sm:mb-12">
             <Heart
-              size={32}
+              size={28}
               fill="currentColor"
-              className="text-red-600"
+              className="text-red-600 sm:h-8 sm:w-8"
             />
 
-            <h1 className="text-4xl font-bold text-[#560319]">
+            <h1 className="text-3xl font-bold text-[#560319] sm:text-4xl">
               My Wishlist
             </h1>
           </div>

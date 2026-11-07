@@ -9,6 +9,7 @@ import {
 } from "../../ui/dialog";
 import { Button } from "../../ui/button";
 import type { Product } from "../../../api/product.api";
+import { formatMVR } from "../../../lib/formatCurrency";
 
 type ViewProductDialogProps = {
   product: Product;
@@ -100,9 +101,15 @@ function ViewProductDialog({
               )}
             </div>
 
-            <p className="text-2xl font-semibold text-[#560319]">
-              ${product.price}
-            </p>
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-[18px] italic font-medium text-emerald-700/65">
+              {formatMVR(product.price).replace(/[\d,. ]/g, "").trim()}
+              </span>
+              <span className="text-[18px] font-semibold text-[#560319] tabular-nums">
+                {formatMVR(product.price).replace(/[^\d,.]/g, "").trim()}
+              </span>
+               
+            </div>
 
             <span
               className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-medium ${

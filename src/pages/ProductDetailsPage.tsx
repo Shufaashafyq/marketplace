@@ -8,6 +8,7 @@ import { CATEGORIES } from "../lib/categories";
 import { useWishlist } from "../context/WishlistContext";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
+import {  formatMVRSymbol, formatMVRAmount } from "../lib/formatCurrency";
 
 function ProductDetailsPage() {
   const { id } = useParams();
@@ -110,20 +111,20 @@ function ProductDetailsPage() {
       product.images[0];
 
     return (
-      <main className="min-h-screen bg-[#F8F8F7] px-5 py-8 sm:px-8 lg:py-12">
+      <main className="min-h-screen bg-[#F8F8F7] px-4 py-6 sm:px-8 lg:py-12">
         <div className="mx-auto max-w-6xl">
           <button
             type="button"
-            onClick={() => navigate("/products")}
-            className="mb-8 flex items-center gap-2 text-sm text-[#946D6D] transition-colors hover:text-[#560319]"
+            onClick={() => navigate("/products#our-gifts")}
+            className="mb-6 flex items-center gap-2 text-sm text-[#946D6D] transition-colors hover:text-[#560319] sm:mb-8"
           >
             <ArrowLeft size={17} strokeWidth={1.8} />
             Back to gifts
           </button>
 
-          <div className="grid gap-10 md:grid-cols-2 md:items-center lg:gap-16">
+          <div className="grid gap-6 md:grid-cols-2 md:items-center lg:gap-16">
             {/* Product Image */}
-            <div className="relative overflow-hidden rounded-2xl bg-[#F3EDF5]">
+            <div className="relative overflow-hidden rounded-xl bg-[#F3EDF5] sm:rounded-2xl">
               {primaryImage ? (
                 <img
                   src={primaryImage.url}
@@ -140,25 +141,31 @@ function ProductDetailsPage() {
             </div>
 
             {/* Product Info */}
-            <div>
+            <div className="w-full">
               <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#A290B7]">
                 {product.category}
               </p>
 
               <h1
-                className="mt-2 text-5xl leading-none text-[#560319] sm:text-6xl"
+                className="mt-2 text-3xl leading-tight text-[#560319] sm:text-5xl lg:text-6xl"
                 style={{ fontFamily: "'Estonia', cursive" }}
               >
                 {product.name}
               </h1>
 
-              <p className="mt-5 text-2xl font-semibold text-[#560319]">
-                ${product.price}
+              <p className="mt-5 flex flex-wrap items-baseline gap-1.5">
+                <span className="text-[15px] italic font-medium text-emerald-700/65 sm:text-[16px]">
+                  {formatMVRSymbol(product.price)}
+                </span>
+
+                <span className="text-[14px] font-semibold text-[#560319] tabular-nums sm:text-[15px]">
+                  {formatMVRAmount(product.price)}
+                </span>
               </p>
 
-              <div className="my-7 h-px bg-[#E8DCEB]" />
+              <div className="my-6 h-px bg-[#E8DCEB] sm:my-7" />
 
-              <p className="text-sm leading-7 text-[#6F6666]">
+              <p className="text-sm leading-6 text-[#6F6666] sm:leading-7">
                 {product.description}
               </p>
 
@@ -170,7 +177,7 @@ function ProductDetailsPage() {
               </p>
 
               {/* Actions */}
-              <div className="mt-8 flex items-center gap-3">
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
                 <button
                   type="button"
                   onClick={handleToggleWishlist}
@@ -180,7 +187,7 @@ function ProductDetailsPage() {
                       : "Add to wishlist"
                   }
                   aria-pressed={isFavorite}
-                  className="flex h-12 w-12 items-center justify-center rounded-full border border-[#E8DCEB] text-[#560319] transition-all duration-200 hover:bg-[#F3EDF5]"
+                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[#E8DCEB] text-[#560319] transition-all duration-200 hover:bg-[#F3EDF5]"
                 >
                   <Heart
                     size={19}
@@ -193,7 +200,7 @@ function ProductDetailsPage() {
                   type="button"
                   onClick={handleAddToCart}
                   disabled={product.stock === 0}
-                  className="flex h-12 flex-1 items-center justify-center gap-2 rounded-full bg-[#560319] px-6 text-sm font-medium text-[#FDF4D2] transition-all duration-200 hover:bg-[#6D0825] hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#560319] px-6 text-sm font-medium text-[#FDF4D2] transition-all duration-200 hover:bg-[#6D0825] hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50 sm:flex-1"
                 >
                   <ShoppingCart
                     size={18}

@@ -23,11 +23,11 @@ function AdminProductsPage() {
   }, []);
 
   return (
-    <div className="px-6 pb-8 pt-4 md:px-8 md:pb-8 md:pt-5">
-      <div className="flex items-center justify-between">
+    <div className="px-4 pb-8 pt-4 sm:px-6 md:px-8 md:pb-8 md:pt-5">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2
-            className="text-6xl text-[#560319]"
+            className="text-4xl text-[#560319] sm:text-6xl"
             style={{ fontFamily: "'Estonia', cursive" }}
           >
             Products

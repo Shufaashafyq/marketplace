@@ -26,6 +26,7 @@ function AdminInventoryPage() {
 
   const [updating, setUpdating] = useState(false);
 
+
   async function loadInventory() {
     try {
       setLoading(true);
@@ -115,7 +116,8 @@ function AdminInventoryPage() {
     if (!inventory) {
       return [];
     }
-
+    
+    //derive products stock <= 5 from all products, put in asc
     return inventory.products
       .filter((product) => product.stock <= 5)
       .sort((a, b) => a.stock - b.stock);
@@ -130,7 +132,8 @@ function AdminInventoryPage() {
         total: 0,
       };
     }
-
+    
+    //total products used to calc %
     const total = inventory.products.length;
 
     return {
@@ -141,6 +144,8 @@ function AdminInventoryPage() {
     };
   }, [inventory]);
 
+
+  // %= no. of products in stock category / total products x100
   function getPercentage(value: number) {
     if (overview.total === 0) {
       return 0;
@@ -163,11 +168,11 @@ function AdminInventoryPage() {
   }
 
   return (
-    <div className="mmin-h-full px-6 pb-8 pt-4 md:px-8 md:pb-8 md:pt-2">
+    <div className="min-h-full px-4 pb-8 pt-4 sm:px-6 md:px-8 md:pb-8 md:pt-2">
       {/* Header */}
       <div>
         <h1
-          className="text-6xl leading-none text-[#560319]"
+          className="text-4xl leading-none text-[#560319] sm:text-6xl"
           style={{ fontFamily: "'Estonia', cursive" }}
         >
           Inventory
@@ -276,7 +281,7 @@ function AdminInventoryPage() {
           <div className="mt-3 h-px bg-[#E8DCEB]" />
         </div>
 
-        <div className="rounded-2xl border border-[#E8DCEB] bg-white p-6 shadow-sm">
+        <div className="rounded-2xl border border-[#E8DCEB] bg-white p-4 shadow-sm sm:p-6">
           <div className="space-y-5">
             {/* In Stock */}
             <div>

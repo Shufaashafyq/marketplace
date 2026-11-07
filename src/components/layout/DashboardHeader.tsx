@@ -27,9 +27,9 @@ function DashboardHeader({
 
   return (
     <header className="bg-[#560319]">
-      <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-5">
-        <div className="flex items-center gap-4">
-          <div className="group relative">
+      <div className="mx-auto flex h-20 max-w-6xl items-center justify-between gap-3 px-3 sm:px-5">
+        <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-4">
+          <div className="group relative shrink-0">
             <button
               type="button"
               onClick={onFilterClick}
@@ -37,8 +37,9 @@ function DashboardHeader({
               className="flex items-center justify-center text-[#FDF4D2] transition-opacity hover:opacity-70"
             >
               <SlidersHorizontal
-                size={21}
+                size={20}
                 strokeWidth={1.8}
+                className="sm:h-5.25 sm:w-5.25"
               />
             </button>
 
@@ -46,7 +47,7 @@ function DashboardHeader({
           </div>
 
           <h1
-            className="text-3xl font-bold text-[#FDF4D2] sm:text-4xl"
+            className="truncate text-xl font-bold text-[#FDF4D2] sm:text-3xl lg:text-4xl"
             style={{
               fontFamily: "'Estonia', cursive",
             }}
@@ -56,7 +57,7 @@ function DashboardHeader({
         </div>
 
         {/* Navigation */}
-        <div className="flex items-center gap-6">
+        <div className="flex shrink-0 items-center gap-3 sm:gap-6">
           {/* Products */}
           <div className="group relative">
             <button
@@ -65,7 +66,7 @@ function DashboardHeader({
               onClick={() => navigate("/products#our-gifts")}
               className="flex items-center justify-center text-[#FDF4D2] transition-opacity hover:opacity-70"
             >
-              <Store size={21} strokeWidth={1.8} />
+              <Store size={19} strokeWidth={1.8} className="sm:h-5.25 sm:w-5.25" />
             </button>
 
             <NavTooltip label="Products" />
@@ -79,7 +80,7 @@ function DashboardHeader({
               onClick={() => navigate("/wishlist")}
               className="relative flex items-center justify-center text-[#FDF4D2] transition-opacity hover:opacity-70"
             >
-              <Heart size={21} strokeWidth={1.8} />
+              <Heart size={19} strokeWidth={1.8} className="sm:h-5.25 sm:w-5.25" />
               {wishlistCount > 0 && (
                 <span className="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#FDF4D2] px-1 text-[9px] font-semibold text-[#946D6D]">
                   {wishlistCount}
@@ -99,8 +100,9 @@ function DashboardHeader({
               className="relative flex items-center justify-center text-[#FDF4D2] transition-opacity hover:opacity-70"
             >
               <ShoppingCart
-                size={21}
+                size={19}
                 strokeWidth={1.8}
+                className="sm:h-5.25 sm:w-5.25"
               />
 
               {cartCount > 0 && (
@@ -121,7 +123,7 @@ function DashboardHeader({
               onClick={() => setProfileOpen(true)}
               className="flex items-center justify-center text-[#FDF4D2] transition-opacity hover:opacity-70"
             >
-              <User size={21} strokeWidth={1.8} />
+              <User size={19} strokeWidth={1.8} className="sm:h-5.25 sm:w-5.25" />
             </button>
 
             <NavTooltip label="Profile" />

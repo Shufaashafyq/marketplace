@@ -118,7 +118,7 @@ function ProfileDialog({
         }
       }}
     >
-      <DialogContent className="border-[#E8DCEB] bg-[#FFFCFC] shadow-[0_20px_60px_rgba(86,3,25,0.12)] xm:max-w-md">
+      <DialogContent className="border-[#E8DCEB] bg-[#FFFCFC] shadow-[0_20px_60px_rgba(86,3,25,0.12)] max-w-[calc(100%-1.5rem)] rounded-2xl sm:max-w-md">
         {/* Header */}
         <DialogHeader className="space-y-1">
           <div className="flex items-center gap-3">
@@ -127,7 +127,7 @@ function ProfileDialog({
             </div>
 
             <div>
-              <DialogTitle className="text-2xl font-semibold text-[#560319]">
+              <DialogTitle className="text-xl font-semibold text-[#560319] sm:text-2xl">
                 My Profile
               </DialogTitle>
 
@@ -139,17 +139,17 @@ function ProfileDialog({
         </DialogHeader>
 
         {loading ? (
-          <div className="flex min-h-62.5 items-center justify-center">
+          <div className="flex min-h-40 items-center justify-center">
             <p className="text-sm text-[#A290B7]">
               Loading profile...
             </p>
           </div>
         ) : (
-          <div className="space-y-7">
+          <div className="space-y-5 sm:space-y-7">
             {/* Profile Avatar */}
             <div className="flex flex-col items-center pt-2">
-              <div className="flex h-24 w-24 items-center justify-center rounded-full border-2 border-[#E8DCEB] bg-[#F3EAF5] shadow-sm">
-                <span className="text-3xl font-semibold text-[#560319]">
+              <div className="flex h-20 w-20 items-center justify-center rounded-full border-2 border-[#E8DCEB] bg-[#F3EAF5] shadow-sm sm:h-24 sm:w-24">
+                <span className="text-2xl font-semibold text-[#560319] sm:text-3xl">
                   {initials}
                 </span>
               </div>
@@ -163,7 +163,7 @@ function ProfileDialog({
             <div className="border-t border-[#E8DCEB]" />
 
             {/* Personal Information */}
-            <div className="space-y-5">
+            <div className="space-y-4 sm:space-y-5">
               <div>
                 <h2 className="text-base font-semibold text-[#560319]">
                   Personal Information
@@ -234,31 +234,33 @@ function ProfileDialog({
 
         {/* Footer */}
         <DialogFooter className="border-t border-[#E8DCEB] pt-4 sm:justify-end">
-          <Button
-            type="button"
-            variant="outline"
-            disabled={saving}
-            onClick={handleClose}
-            className="h-10 rounded-lg border-[#E8DCEB] bg-white px-5 text-sm font-medium text-[#560319] shadow-none hover:bg-[#F3EAF5] hover:text-[#560319]"
-          >
-            Cancel
-          </Button>
+          <div className="flex w-full flex-col-reverse gap-2 sm:w-auto sm:flex-row">
+            <Button
+              type="button"
+              variant="outline"
+              disabled={saving}
+              onClick={handleClose}
+              className="h-10 rounded-lg border-[#E8DCEB] bg-white px-5 text-sm font-medium text-[#560319] shadow-none hover:bg-[#F3EAF5] hover:text-[#560319]"
+            >
+              Cancel
+            </Button>
 
-          <Button
-            type="button"
-            disabled={
-              loading ||
-              saving ||
-              !profile ||
-              !hasChanges
-            }
-            onClick={handleSave}
-            className="h-10 rounded-lg bg-[#560319] px-5 text-sm font-medium text-white shadow-sm transition-all hover:bg-[#3D0112]"
-          >
-            <Save className="mr-2 h-4 w-4" />
+            <Button
+              type="button"
+              disabled={
+                loading ||
+                saving ||
+                !profile ||
+                !hasChanges
+              }
+              onClick={handleSave}
+              className="h-10 rounded-lg bg-[#560319] px-5 text-sm font-medium text-white shadow-sm transition-all hover:bg-[#3D0112]"
+            >
+              <Save className="mr-2 h-4 w-4" />
 
-            {saving ? "Saving..." : "Save Changes"}
-          </Button>
+              {saving ? "Saving..." : "Save Changes"}
+            </Button>
+          </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>

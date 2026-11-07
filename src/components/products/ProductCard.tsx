@@ -1,11 +1,12 @@
 import { motion } from "motion/react";
-import { Heart, ShoppingCart } from "lucide-react";
+import { Heart, ShoppingCart, Banknote } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import type { Product } from "../../api/product.api";
 import { useWishlist } from "../../context/WishlistContext";
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
 import { toast } from "sonner";
+import { formatMVRSymbol, formatMVRAmount } from "../../lib/formatCurrency";
 
 type ProductCardProps = {
   product: Product;
@@ -249,11 +250,12 @@ function ProductCard({ product }: ProductCardProps) {
             className="
               mt-1.5
               cursor-pointer
-              text-4xl
+              text-2xl
               leading-snug
               text-[#560319]
               transition-opacity
               hover:opacity-70
+              sm:text-4xl
             "
             style={{
               fontFamily: "'Estonia', cursive",
@@ -264,12 +266,24 @@ function ProductCard({ product }: ProductCardProps) {
           </h2>
 
           {/* Price n Cart */}
-          <div className="mt-4 flex items-center justify-between gap-2">
-            <p className="text-base font-semibold text-[#560319]">
-              ${product.price}
-            </p>
+          <div className="mt-3 flex items-center justify-between gap-2 sm:mt-4">
+            <div className="flex min-w-0 items-baseline gap-1.5">
+              <Banknote
+                size={14}
+                strokeWidth={1.8}
+                className="shrink-0 translate-y-px text-emerald-700/55 sm:h-4 sm:w-4"
+              />
 
-            <div className="group/cart relative">
+              <span className="text-[13px] italic font-medium text-emerald-700/65 sm:text-[15px]">
+                {formatMVRSymbol(product.price)}
+              </span>
+
+              <span className="truncate text-[13px] font-semibold text-[#560319] tabular-nums sm:text-[15px]">
+                {formatMVRAmount(product.price)}
+              </span>
+            </div>
+
+            <div className="group/cart relative shrink-0">
               <motion.button
                 type="button"
                 aria-label={`Add ${product.name} to cart`}
@@ -281,41 +295,21 @@ function ProductCard({ product }: ProductCardProps) {
                   scale: 0.9,
                 }}
                 className="
-                  flex h-9 w-9
+                  flex h-8 w-8
                   items-center justify-center
                   rounded-full
                   text-[#560319]
-                  transition-colors
-                  hover:bg-[#F3EAF5]
-                  hover:text-[#3D0112]
+                  transition-colors hover:bg-[#F3EDF5]
+                  sm:h-9 sm:w-9
                 "
+                onMouseDown={(event) => event.stopPropagation()}
               >
                 <ShoppingCart
-                  size={18}
+                  size={15}
                   strokeWidth={1.8}
+                  className="sm:h-4.5 sm:w-4.5"
                 />
               </motion.button>
-
-              {/* Tooltip */}
-              <span
-                className="
-                  pointer-events-none
-                  absolute bottom-full right-0 mb-2
-                  whitespace-nowrap
-                  rounded-md
-                  bg-[#FDF4D2]
-                  px-2.5 py-1.5
-                  text-[10px]
-                  font-medium
-                  text-[#560319]
-                  opacity-0
-                  shadow-sm
-                  transition-opacity duration-200
-                  group-hover/cart:opacity-100
-                "
-              >
-                Add to cart
-              </span>
             </div>
           </div>
         </div>
@@ -325,3 +319,4 @@ function ProductCard({ product }: ProductCardProps) {
 }
 
 export default ProductCard;
+

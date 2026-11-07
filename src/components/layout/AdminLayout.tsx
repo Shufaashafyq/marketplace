@@ -22,7 +22,7 @@ function AdminLayout() {
     <div className="min-h-screen bg-[#F8F8F7]">
       <AdminHeader />
 
-      <div className="flex min-h-[calc(100vh-4rem)]">
+      <div className="flex min-h-[calc(100vh-4rem)] flex-col sm:flex-row">
         <AdminSidebar />
 
         <main className="min-w-0 flex-1">

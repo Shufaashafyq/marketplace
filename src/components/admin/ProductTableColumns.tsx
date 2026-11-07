@@ -1,6 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import type { Product } from "../../api/product.api";
 import ProductTableActions from "./ProductTableActions";
+import { formatMVR } from "../../lib/formatCurrency";
 
 export function getProductTableColumns(
   onProductsChanged: () => void
@@ -61,16 +62,33 @@ export function getProductTableColumns(
     ),
   },
 
-  {
-    accessorKey: "price",
-    header: "Price",
 
-    cell: (info) => (
-      <span className="text-sm font-medium text-[#560319]">
-        ${info.getValue<string>()}
+{
+  accessorKey: "price",
+  header: "Price",
+  cell: (info) => {
+    const formattedPrice = formatMVR(
+      info.getValue<string>() ?? "0"
+    );
+
+    const parts = formattedPrice.match(/^(.*?\s)([\d,.]+)$/);
+
+    if (!parts) return formattedPrice;
+
+    return (
+      <span className="inline-flex items-baseline gap-1">
+        <span className="text-[13px] italic font-medium text-emerald-700/65">
+          {parts[1].trim()}
+        </span>
+
+        <span className="text-[13px] font-semibold text-[#560319] tabular-nums">
+          {parts[2]}
+        </span>
       </span>
-    ),
+    );
   },
+},
+
 
   {
     accessorKey: "stock",

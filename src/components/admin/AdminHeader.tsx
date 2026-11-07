@@ -9,20 +9,18 @@ function AdminHeader() {
 
   return (
     <header className="bg-[#560319]">
-      <div className="mx-auto flex h-20 items-center justify-between px-5">
+      <div className="mx-auto flex flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-5">
         <div>
           <h1
-            className="text-3xl text-[#FDF4D2] sm:text-4xl"
+            className="text-2xl text-[#FDF4D2] sm:text-4xl"
             style={{ fontFamily: "'Estonia', cursive" }}
           >
             The Art of Gift Giving
           </h1>
         </div>
 
-        <div className="flex items-center gap-6">
-         
-          {/* Admin Profile */}
-          <div className="flex items-center gap-3 border-l border-[#FDF4D2]/20 pl-5">
+        <div className="flex items-center justify-between gap-3 sm:gap-6">
+          <div className="flex items-center gap-3 border-l border-[#FDF4D2]/20 pl-3 sm:pl-5">
             <div className="relative">
               <button
                 type="button"
@@ -43,8 +41,7 @@ function AdminHeader() {
               />
             </div>
 
-            {/* Admin Details */}
-            <div className="hidden sm:block">
+            <div className="sm:block">
               <p className="text-sm font-medium text-[#FDF4D2]">
                 {user?.name}
               </p>
