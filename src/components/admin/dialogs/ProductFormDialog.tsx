@@ -8,9 +8,7 @@ import {
   DialogTrigger,
 } from "../../ui/dialog";
 import { Button } from "../../ui/button";
-import {
-  createProduct,
-  updateProduct,
+import { createProduct, updateProduct,
   type Product,
   type ProductImage as ProductImageType,
 } from "../../../api/product.api";
@@ -246,20 +244,15 @@ function ProductFormDialog({
 
     setError("");
 
-    const nameValidation =
-      validateProductName(name);
+    const nameValidation = validateProductName(name);
 
-    const descriptionValidation =
-      validateProductDescription(description);
+    const descriptionValidation = validateProductDescription(description);
 
-    const priceValidation =
-      validateProductPrice(price);
+    const priceValidation = validateProductPrice(price);
 
-    const stockValidation =
-      validateProductStock(stock);
+    const stockValidation = validateProductStock(stock);
 
-    const categoryValidation =
-      validateProductCategory(category);
+    const categoryValidation = validateProductCategory(category);
 
     const imageValidation =
       validateProductImages(
@@ -277,12 +270,9 @@ function ProductFormDialog({
     setImageError(imageValidation);
 
     if (
-      nameValidation ||
-      descriptionValidation ||
-      priceValidation ||
-      stockValidation ||
-      categoryValidation ||
-      imageValidation
+      nameValidation || descriptionValidation ||
+      priceValidation || stockValidation ||
+      categoryValidation || imageValidation
     ) {
       return;
     }

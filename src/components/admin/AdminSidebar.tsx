@@ -3,6 +3,7 @@ import {
   LogOut,
   Package,
   Tags,
+  Activity,
 } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
@@ -14,17 +15,20 @@ const navigation = [
     icon: LayoutDashboard,
     end: true,
   },
-
   {
     label: "Inventory",
     path: "/admin/inventory",
     icon: Package,
   },
-
   {
     label: "Products",
     path: "/admin/products",
     icon: Tags,
+  },
+  {
+    label: "Audit Logs",
+    path: "/admin/audit",
+    icon: Activity,
   },
 ];
 
@@ -33,13 +37,13 @@ function AdminSidebar() {
   const { logout } = useAuth();
 
   return (
-    <aside className="border-b border-[#E8DCEB] bg-white sm:sticky sm:top-0 sm:h-[calc(100vh-4rem)] sm:w-60 sm:shrink-0 sm:border-b-0 sm:border-r">
-      <div className="overflow-x-auto px-3 py-3 sm:h-full sm:flex-1 sm:overflow-y-auto sm:px-4 sm:py-6">
-        <p className="px-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#A290B7] sm:px-3">
+    <aside className="w-full shrink-0 border-b border-[#E8DCEB] bg-white sm:sticky sm:top-0 sm:flex sm:h-[calc(100vh-4rem)] sm:w-60 sm:flex-col sm:border-b-0 sm:border-r">
+      <div className="overflow-x-auto px-2 py-2 sm:flex-1 sm:overflow-y-auto sm:overflow-x-hidden sm:px-4 sm:py-6">
+        <p className="hidden px-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#A290B7] sm:block">
           Management
         </p>
 
-        <nav className="mt-3 flex gap-2 overflow-x-auto pb-1 sm:mt-4 sm:block sm:space-y-1 sm:overflow-visible sm:pb-0">
+        <nav className="flex min-w-max gap-1 sm:mt-4 sm:min-w-0 sm:flex-col sm:space-y-1">
           {navigation.map((item) => {
             const Icon = item.icon;
 
@@ -49,22 +53,36 @@ function AdminSidebar() {
                 to={item.path}
                 end={item.end}
                 className={({ isActive }) =>
-                  `flex min-w-max items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors ${
+                  `flex shrink-0 items-center justify-center gap-2 rounded-lg px-3 py-2 text-xs transition-colors sm:w-full sm:justify-start sm:py-2.5 sm:text-sm ${
                     isActive
-                      ? "bg-[#F3EAF5] font-medium text-[#560319]"
+                      ? "bg-[#560319] font-medium text-white"
                       : "text-[#8F8585] hover:bg-[#FAF6F6] hover:text-[#560319]"
                   }`
                 }
               >
-                <Icon size={18} strokeWidth={1.8} />
-                <span>{item.label}</span>
+                <Icon size={16} strokeWidth={1.8} className="sm:h-4.5 sm:w-4.5" />
+                <span className="whitespace-nowrap">{item.label}</span>
               </NavLink>
             );
           })}
+          <button
+            type="button"
+            onClick={async () => {
+              try {
+                await logout();
+              } finally {
+                navigate("/login");
+              }
+            }}
+            className="flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-xs text-[#8F8585] transition-colors hover:bg-[#FAF6F6] hover:text-[#560319] sm:hidden"
+          >
+            <LogOut size={16} strokeWidth={1.8} />
+            <span className="whitespace-nowrap">Logout</span>
+          </button>
         </nav>
       </div>
 
-      <div className="border-t border-[#E8DCEB] px-3 pb-3 pt-3 sm:px-4 sm:pb-7 sm:pt-4">
+      <div className="hidden border-t border-[#E8DCEB] px-4 pb-7 pt-4 sm:block">
         <button
           type="button"
           onClick={async () => {

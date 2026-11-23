@@ -1,5 +1,5 @@
 import { Package } from "lucide-react";
-import type { Product } from "../../api/product.api";
+import type { Product } from "../../../api/product.api";
 
 function getStockStatus(stock: number) {
   if (stock === 0) {
@@ -7,6 +7,8 @@ function getStockStatus(stock: number) {
       label: "Out of stock",
       dot: "bg-red-400",
       pill: "bg-[#FBE8EC] text-[#8B1A1A]",
+      glow: "0 0 5px #F87171, 0 0 9px #F8717180",
+      pillGlow: "0 0 10px #34D39935",
     };
   }
 
@@ -15,6 +17,8 @@ function getStockStatus(stock: number) {
       label: "Low stock",
       dot: "bg-amber-400",
       pill: "bg-[#FDF4D2] text-[#7A4A00]",
+      glow: "0 0 5px #FBBF24, 0 0 9px #FBBF2480",
+      pillGlow: "0 0 8px #FBBF2420",
     };
   }
 
@@ -22,6 +26,8 @@ function getStockStatus(stock: number) {
     label: "In stock",
     dot: "bg-emerald-400",
     pill: "bg-[#EAF5ED] text-[#1E5C35]",
+    glow: "0 0 5px #34D399, 0 0 9px #34D39980",
+    pillGlow: "0 0 8px #34D39920",
   };
 }
 
@@ -104,15 +110,21 @@ export function getInventoryTableColumns(
         const status = getStockStatus(product.stock);
 
         return (
-          <span
-            className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-semibold tracking-[0.06em] ${status.pill}`}
-          >
-            <span
-              className={`h-1.5 w-1.5 rounded-full ${status.dot}`}
-            />
+         <span
+  className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-semibold tracking-[0.06em] ${status.pill}`}
+  style={{
+    boxShadow: status.pillGlow,
+  }}
+>
+  <span
+    className={`h-1.5 w-1.5 rounded-full ${status.dot}`}
+    style={{
+      boxShadow: status.glow,
+    }}
+  />
 
-            {status.label}
-          </span>
+  {status.label}
+</span>
         );
       },
     },

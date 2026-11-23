@@ -30,7 +30,7 @@ function WishlistPage() {
       <DashboardHeader onFilterClick={handleFilterClick} />
 
       <main className="min-h-screen bg-linear-to-br from-[#F9F6FB] via-transparent to-[#F3EDF5]">
-        <div className="mx-auto max-w-6xl px-4 py-8 sm:px-5 sm:py-12">
+        <div className="mx-auto max-w-6xl px-4 py-4 sm:px-5 sm:py-5">
           <button
             type="button"
             onClick={() => navigate("/products#our-gifts")}
@@ -48,7 +48,8 @@ function WishlistPage() {
               className="text-red-600 sm:h-8 sm:w-8"
             />
 
-            <h1 className="text-3xl font-bold text-[#560319] sm:text-4xl">
+            <h1 className="text-4xl font-bold text-[#560319] sm:text-6xl"
+            style={{ fontFamily: "'Estonia', cursive" }}>
               My Wishlist
             </h1>
           </div>

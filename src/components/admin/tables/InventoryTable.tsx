@@ -14,9 +14,10 @@ import {
   tableFeatures,
   useTable,
 } from "@tanstack/react-table";
-
-import type { Product } from "../../api/product.api";
+import type { Product } from "../../../api/product.api";
 import { getInventoryTableColumns } from "./InventoryTableColumns";
+import { AdminTableSkeleton } from "../AdminSkeleton";
+
 
 type InventoryTableProps = {
   products: Product[];
@@ -63,16 +64,7 @@ function InventoryTable({
   const pageCount = table.getPageCount();
 
   if (loading) {
-    return (
-      <div className="overflow-hidden rounded-2xl border border-[#E8DCEB] bg-white shadow-sm">
-        <div className="flex items-center justify-center py-16">
-          <div className="flex items-center gap-2 text-sm text-[#A290B7]">
-            <Package className="h-4 w-4" />
-            Loading inventory...
-          </div>
-        </div>
-      </div>
-    );
+    return <AdminTableSkeleton rows={5} />;
   }
 
   return (

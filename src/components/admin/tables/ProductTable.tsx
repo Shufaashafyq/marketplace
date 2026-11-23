@@ -16,9 +16,10 @@ import {
   tableFeatures,
   useTable,
 } from "@tanstack/react-table";
-import type { Product } from "../../api/product.api";
-import { CATEGORIES } from "../../lib/categories";
+import type { Product } from "../../../api/product.api";
+import { CATEGORIES } from "../../../lib/categories";
 import { getProductTableColumns } from "./ProductTableColumns";
+import { AdminTableSkeleton } from "../AdminSkeleton";
 
 type ProductTableProps = {
   products: Product[];
@@ -45,7 +46,8 @@ function ProductTable({
   const productTableColumns = getProductTableColumns(onProductsChanged);
   const [globalFilter, setGlobalFilter] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("ALL");
-
+  
+  //display 5 products per page
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 5,
@@ -94,12 +96,12 @@ function ProductTable({
 
   if (loading) {
     return (
-      <div className="mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white">
-        <div className="flex items-center justify-center py-16">
-          <p className="text-sm text-slate-500">
-            Loading products...
-          </p>
+      <div className="mt-6 space-y-4">
+        <div className="flex items-center gap-3">
+          <div className="h-10 w-72 animate-pulse rounded-lg bg-[#EEE7EF]" />
+          <div className="h-10 w-36 animate-pulse rounded-lg bg-[#EEE7EF]" />
         </div>
+        <AdminTableSkeleton rows={5} />
       </div>
     );
   }
@@ -107,7 +109,7 @@ function ProductTable({
   return (
     <div className="mt-6 space-y-4">
       {/* Search n Filter */}
-      <div className="flex items-center gap-3">
+      <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
         <input
           type="text"
           value={globalFilter}
@@ -116,7 +118,7 @@ function ProductTable({
             resetPagination();
           }}
           placeholder="Search products..."
-          className="w-72 rounded-lg border border-[#E8DCEB] bg-[#FDF6F8] px-4 py-2.5 text-sm text-[#560319] outline-none transition placeholder:text-[#B4A5A5] focus:border-[#C8B3CE] focus:ring-2 focus:ring-[#F3EAF5]"
+          className="w-full rounded-lg border border-[#E8DCEB] bg-[#FDF6F8] px-4 py-2.5 text-sm text-[#560319] outline-none transition-all placeholder:text-[#B4A5A5] focus-visible:border-[#93c572] focus-visible:ring-2 focus-visible:ring-[#454d32]/30 focus-visible:shadow-[0_0_8px_#93c57260] sm:w-72"
         />
 
         <select

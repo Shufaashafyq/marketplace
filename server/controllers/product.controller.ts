@@ -8,6 +8,9 @@ import {
   deleteProduct,
 } from "../services/product.service";
 import { deleteImage, uploadImage } from "../services/cloudinary.service";
+import { AuthenticatedRequest } from "../middleware/auth.middleware";
+import prisma from "../lib/prisma";
+import { createLog } from "../services/audit.service";
 
 
 function isNotFound(error: unknown) {
@@ -17,7 +20,42 @@ function isNotFound(error: unknown) {
   );
 }
 
-export async function create(req: Request, res: Response) {
+async function recordAdminAction(
+  req: AuthenticatedRequest,
+  data: {
+    action: string;
+    entityType: string;
+    entityId?: string;
+    entityName: string;
+    details?: Record<string, unknown>;
+  },
+) {
+  try {
+    if (!req.user) return;
+
+    const admin = await prisma.user.findUnique({
+      where: {
+        id: req.user.userId,
+      },
+      select: {
+        name: true,
+      },
+    });
+
+    if (!admin) return;
+
+    await createLog({
+      ...data,
+      adminId: req.user.userId,
+      adminName: admin.name,
+    });
+  } catch (error) {
+    console.error("Failed to create audit log:", error);
+  }
+}
+
+//validate data with zod,check imgs exist
+export async function create(req: AuthenticatedRequest, res: Response,) {
   try {
     const result = createProductSchema.safeParse(req.body);
 
@@ -53,6 +91,18 @@ export async function create(req: Request, res: Response) {
       uploadedImages,
     );
 
+    await recordAdminAction(req, {
+      action: "CREATE_PRODUCT",
+      entityType: "PRODUCT",
+      entityId: product.id,
+      entityName: product.name,
+      details: {
+        price: product.price.toString(),
+        stock: product.stock,
+        category: product.category,
+      },
+    });
+
     return res.status(201).json({
       message: "Product created successfully",
       product,
@@ -66,6 +116,7 @@ export async function create(req: Request, res: Response) {
   }
 }
 
+//return all products
 export async function getAll(
   _req: Request,
   res: Response,
@@ -85,6 +136,7 @@ export async function getAll(
   }
 }
 
+//return one product
 export async function getOne(
   req: Request,
   res: Response,
@@ -113,7 +165,7 @@ export async function getOne(
 }
 
 export async function update(
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
 ) {
   try {
@@ -210,6 +262,29 @@ export async function update(
       },
     );
 
+    await recordAdminAction(req, {
+      action: "UPDATE_PRODUCT",
+      entityType: "PRODUCT",
+      entityId: product.id,
+      entityName: product.name,
+      details: {
+        before: {
+          name: current.name,
+          price: current.price.toString(),
+          stock: current.stock,
+          category: current.category,
+          brand: current.brand,
+        },
+        after: {
+          name: product.name,
+          price: product.price.toString(),
+          stock: product.stock,
+          category: product.category,
+          brand: product.brand,
+        },
+      },
+    });
+
     await Promise.all(
       removedImages.map((image) =>
         deleteImage(image.publicId).catch((error) => {
@@ -238,7 +313,7 @@ export async function update(
 }
 
 export async function remove(
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
 ) {
   try {
@@ -251,6 +326,19 @@ export async function remove(
     }
 
     await deleteProduct(req.params.id as string);
+
+    //save product info in audit record after deletion
+    await recordAdminAction(req, {
+      action: "DELETE_PRODUCT",
+      entityType: "PRODUCT",
+      entityId: product.id,
+      entityName: product.name,
+      details: {
+        price: product.price.toString(),
+        stock: product.stock,
+        category: product.category,
+      },
+    });
 
     await Promise.all(
       product.images.map((image) =>

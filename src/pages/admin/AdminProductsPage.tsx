@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import ProductTable from "../../components/admin/ProductTable";
+import ProductTable from "../../components/admin/tables/ProductTable";
 import { getProducts, type Product } from "../../api/product.api";
 import AddProductDialog from "../../components/admin/AddProductBtn";
 

@@ -1,10 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import {
-  Loader2,
-  Package,
-  TriangleAlert,
-  XCircle,
-} from "lucide-react";
+import { useEffect, useState } from "react";
+import { Package, TriangleAlert, XCircle, type LucideIcon } from "lucide-react";
 import { toast } from "sonner";
 import {
   getInventory,
@@ -12,20 +7,97 @@ import {
   type InventoryResponse,
 } from "../../api/inventory.api";
 import type { Product } from "../../api/product.api";
-import InventoryTable from "../../components/admin/InventoryTable";
+import InventoryTable from "../../components/admin/tables/InventoryTable";
 import UpdateStockDialog from "../../components/admin/dialogs/UpdateStockDialog";
+import { AdminTableSkeleton } from "../../components/admin/AdminSkeleton";
+
+type SummaryCardProps = {
+  label: string;
+  value: number;
+  icon: LucideIcon;
+  iconContainerClassName: string;
+  iconClassName: string;
+  iconShadow: string;
+  cardShadow: string;
+};
+
+function SummaryCard({
+  label,
+  value,
+  icon: Icon,
+  iconContainerClassName,
+  iconClassName,
+  iconShadow,
+  cardShadow,
+}: SummaryCardProps) {
+  return (
+    <div
+      className="rounded-2xl border border-[#E8DCEB] bg-white p-5 shadow-sm"
+      style={{ boxShadow: `0 10px 24px ${cardShadow}, 0 0 18px ${cardShadow}` }}
+    >
+      <div className="flex items-start justify-between">
+        <div>
+          <p className="text-xs font-medium uppercase tracking-[0.14em] text-[#A290B7]">
+            {label}
+          </p>
+
+          <p className="mt-3 text-3xl font-semibold text-[#560319]">
+            {value}
+          </p>
+        </div>
+
+        <div
+          className={`flex h-10 w-10 items-center justify-center rounded-xl ${iconContainerClassName}`}
+        >
+          <Icon
+            size={18}
+            className={iconClassName}
+            style={{ filter: `drop-shadow(0 0 5px ${iconShadow})` }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function AdminInventoryPage() {
-  const [inventory, setInventory] =
-    useState<InventoryResponse | null>(null);
+  const [inventory, setInventory] = useState<InventoryResponse | null>(null);
 
   const [loading, setLoading] = useState(true);
 
-  const [selectedProduct, setSelectedProduct] =
-    useState<Product | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   const [updating, setUpdating] = useState(false);
 
+  const summaryCards = [
+    {
+      label: "In Stock",
+      value: inventory?.summary.inStock ?? 0,
+      icon: Package,
+      iconContainerClassName: "bg-[#EAF6EE]",
+      iconClassName: "text-[#3B7D5A]",
+      iconShadow: "#34D399B3",
+      cardShadow: "rgba(52, 211, 153, 0.16)",
+    },
+    {
+      label: "Low Stock",
+      value: inventory?.summary.lowStock ?? 0,
+      icon: TriangleAlert,
+      iconContainerClassName: "bg-[#FDF4D2]",
+      iconClassName: "text-[#946D6D]",
+      iconShadow: "#FBBF24B3",
+      cardShadow: "rgba(251, 191, 36, 0.18)",
+    },
+    {
+      label: "Out of Stock",
+      value: inventory?.summary.outOfStock ?? 0,
+      icon: XCircle,
+      iconContainerClassName: "bg-[#FBE8EC]",
+      iconClassName: "text-[#A34848]",
+      iconShadow: "#F87171B3",
+      cardShadow: "rgba(248, 113, 113, 0.16)",
+    },
+  ];
 
   async function loadInventory() {
     try {
@@ -57,7 +129,7 @@ function AdminInventoryPage() {
 
       const updatedProduct = await updateInventoryStock(
         selectedProduct.id,
-        stock
+        stock,
       );
 
       setInventory((current) => {
@@ -66,28 +138,23 @@ function AdminInventoryPage() {
         }
 
         const products = current.products.map((product) =>
-          product.id === updatedProduct.id
-            ? updatedProduct
-            : product
+          product.id === updatedProduct.id ? updatedProduct : product,
         );
 
         const totalUnits = products.reduce(
           (total, product) => total + product.stock,
-          0
+          0,
         );
 
         const lowStock = products.filter(
-          (product) =>
-            product.stock > 0 && product.stock <= 5
+          (product) => product.stock > 0 && product.stock <= 5,
         ).length;
 
         const outOfStock = products.filter(
-          (product) => product.stock === 0
+          (product) => product.stock === 0,
         ).length;
 
-        const inStock = products.filter(
-          (product) => product.stock > 5
-        ).length;
+        const inStock = products.filter((product) => product.stock > 5).length;
 
         return {
           products,
@@ -112,57 +179,60 @@ function AdminInventoryPage() {
     }
   }
 
-  const productsNeedingAttention = useMemo(() => {
-    if (!inventory) {
-      return [];
-    }
-    
-    //derive products stock <= 5 from all products, put in asc
-    return inventory.products
-      .filter((product) => product.stock <= 5)
-      .sort((a, b) => a.stock - b.stock);
-  }, [inventory]);
-
-  const overview = useMemo(() => {
-    if (!inventory) {
-      return {
-        inStock: 0,
-        lowStock: 0,
-        outOfStock: 0,
-        total: 0,
-      };
-    }
-    
-    //total products used to calc %
-    const total = inventory.products.length;
-
-    return {
-      inStock: inventory.summary.inStock,
-      lowStock: inventory.summary.lowStock,
-      outOfStock: inventory.summary.outOfStock,
-      total,
-    };
-  }, [inventory]);
-
+  //derive products stock <= 5 from all products, put in asc
+  const productsNeedingAttention = inventory
+    ? inventory.products
+        .filter((product) => product.stock <= 5)
+        .sort((a, b) => a.stock - b.stock)
+    : [];
 
   // %= no. of products in stock category / total products x100
-  function getPercentage(value: number) {
-    if (overview.total === 0) {
-      return 0;
-    }
-
-    return Math.round(
-      (value / overview.total) * 100
-    );
-  }
 
   if (loading) {
     return (
-      <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
-        <div className="flex items-center gap-2 text-sm text-[#A290B7]">
-          <Loader2 className="h-4 w-4 animate-spin" />
-          Loading inventory...
+      <div className="min-h-full px-4 pb-8 pt-4 sm:px-6 md:px-8 md:pb-8 md:pt-2">
+        {/* Header */}
+        <div>
+          <h1
+            className="text-4xl leading-none text-[#560319] sm:text-6xl"
+            style={{ fontFamily: "'Estonia', cursive" }}
+          >
+            Inventory
+          </h1>
+
+          <p className="mt-2 text-sm text-[#8F8585]">
+            Monitor and manage your stock levels.
+          </p>
         </div>
+
+        {/* Summary Cards */}
+        <div className="mt-8 grid gap-4 sm:grid-cols-3">
+          {summaryCards.map((card) => (
+            <SummaryCard
+              key={card.label}
+              label={card.label}
+              value={card.value}
+              icon={card.icon}
+              iconContainerClassName={card.iconContainerClassName}
+              iconClassName={card.iconClassName}
+              iconShadow={card.iconShadow}
+              cardShadow={card.cardShadow}
+            />
+          ))}
+        </div>
+
+        {/* Stock Requiring Attention */}
+        <section className="mt-10">
+          <div className="mb-4">
+            <h2 className="text-sm font-semibold text-[#560319]">
+              Stock requiring attention
+            </h2>
+
+            <div className="mt-3 h-px bg-[#E8DCEB]" />
+          </div>
+
+          <AdminTableSkeleton rows={5} />
+        </section>
       </div>
     );
   }
@@ -185,71 +255,18 @@ function AdminInventoryPage() {
 
       {/* Summary Cards */}
       <div className="mt-8 grid gap-4 sm:grid-cols-3">
-        {/* Total Units */}
-        <div className="rounded-2xl border border-[#E8DCEB] bg-white p-5 shadow-sm">
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="text-xs font-medium uppercase tracking-[0.14em] text-[#A290B7]">
-                Total Units
-              </p>
-
-              <p className="mt-3 text-3xl font-semibold text-[#560319]">
-                {inventory?.summary.totalUnits ?? 0}
-              </p>
-            </div>
-
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F3EAF5]">
-              <Package
-                size={18}
-                className="text-[#6F5A82]"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Low Stock */}
-        <div className="rounded-2xl border border-[#E8DCEB] bg-white p-5 shadow-sm">
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="text-xs font-medium uppercase tracking-[0.14em] text-[#A290B7]">
-                Low Stock
-              </p>
-
-              <p className="mt-3 text-3xl font-semibold text-[#560319]">
-                {inventory?.summary.lowStock ?? 0}
-              </p>
-            </div>
-
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#FDF4D2]">
-              <TriangleAlert
-                size={18}
-                className="text-[#946D6D]"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Out of Stock */}
-        <div className="rounded-2xl border border-[#E8DCEB] bg-white p-5 shadow-sm">
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="text-xs font-medium uppercase tracking-[0.14em] text-[#A290B7]">
-                Out of Stock
-              </p>
-
-              <p className="mt-3 text-3xl font-semibold text-[#560319]">
-                {inventory?.summary.outOfStock ?? 0}
-              </p>
-            </div>
-
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#FBE8EC]">
-              <XCircle
-                size={18}
-                className="text-[#A34848]"
-              />
-            </div>
-          </div>
-        </div>
+        {summaryCards.map((card) => (
+          <SummaryCard
+            key={card.label}
+            label={card.label}
+            value={card.value}
+            icon={card.icon}
+            iconContainerClassName={card.iconContainerClassName}
+            iconClassName={card.iconClassName}
+            iconShadow={card.iconShadow}
+            cardShadow={card.cardShadow}
+          />
+        ))}
       </div>
 
       {/* Stock Requiring Attention */}
@@ -269,93 +286,6 @@ function AdminInventoryPage() {
             setSelectedProduct(product);
           }}
         />
-      </section>
-
-      {/* Inventory Overview */}
-      <section className="mt-10">
-        <div className="mb-5">
-          <h2 className="text-sm font-semibold text-[#560319]">
-            Inventory overview
-          </h2>
-
-          <div className="mt-3 h-px bg-[#E8DCEB]" />
-        </div>
-
-        <div className="rounded-2xl border border-[#E8DCEB] bg-white p-4 shadow-sm sm:p-6">
-          <div className="space-y-5">
-            {/* In Stock */}
-            <div>
-              <div className="mb-2 flex items-center justify-between text-xs">
-                <span className="font-medium text-[#560319]">
-                  In stock
-                </span>
-
-                <span className="text-[#A290B7]">
-                  {getPercentage(overview.inStock)}%
-                </span>
-              </div>
-
-              <div className="h-2 overflow-hidden rounded-full bg-[#F3EAF5]">
-                <div
-                  className="h-full rounded-full bg-[#A290B7] transition-all duration-500"
-                  style={{
-                    width: `${getPercentage(
-                      overview.inStock
-                    )}%`,
-                  }}
-                />
-              </div>
-            </div>
-
-            {/* Low Stock */}
-            <div>
-              <div className="mb-2 flex items-center justify-between text-xs">
-                <span className="font-medium text-[#560319]">
-                  Low stock
-                </span>
-
-                <span className="text-[#946D6D]">
-                  {getPercentage(overview.lowStock)}%
-                </span>
-              </div>
-
-              <div className="h-2 overflow-hidden rounded-full bg-[#FDF4D2]">
-                <div
-                  className="h-full rounded-full bg-[#946D6D] transition-all duration-500"
-                  style={{
-                    width: `${getPercentage(
-                      overview.lowStock
-                    )}%`,
-                  }}
-                />
-              </div>
-            </div>
-
-            {/* Out of Stock */}
-            <div>
-              <div className="mb-2 flex items-center justify-between text-xs">
-                <span className="font-medium text-[#560319]">
-                  Out of stock
-                </span>
-
-                <span className="text-[#A34848]">
-                  {getPercentage(overview.outOfStock)}%
-                </span>
-              </div>
-
-              <div className="h-2 overflow-hidden rounded-full bg-[#FBE8EC]">
-                <div
-                  className="h-full rounded-full bg-[#A34848] transition-all duration-500"
-                  style={{
-                    width: `${getPercentage(
-                      overview.outOfStock
-                    )}%`,
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
       </section>
 
       {selectedProduct && (

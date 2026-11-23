@@ -1,10 +1,13 @@
 import type { Request, Response } from "express";
-
 import {
   getInventory,
   updateInventoryStock,
 } from "../services/inventory.service";
+import { AuthenticatedRequest } from "../middleware/auth.middleware";
+import prisma from "../lib/prisma";
+import { createLog } from "../services/audit.service";
 
+//call getInventory() from service
 export async function getInventoryData(
   _req: Request,
   res: Response
@@ -22,12 +25,13 @@ export async function getInventoryData(
   }
 }
 
+
 export async function updateStock(
-  req: Request<{ productId: string }>,
+  req: AuthenticatedRequest,
   res: Response
 ) {
   try {
-    const { productId } = req.params;
+    const productId = req.params.productId as string;
     const { stock } = req.body;
 
     if (
@@ -40,12 +44,56 @@ export async function updateStock(
       });
     }
 
+    // Get the product's current stock before updating
+    const currentProduct = await prisma.product.findUnique({
+      where: {
+        id: productId,
+      },
+    });
+
+    if (!currentProduct) {
+      return res.status(404).json({
+        message: "Product not found",
+      });
+    }
+
+    // Update product stock
     const product = await updateInventoryStock(
       productId,
       stock
     );
 
-    res.json({
+    // Get the admin who performed the action
+    const admin = await prisma.user.findUnique({
+      where: {
+        id: req.user!.userId,
+      },
+      select: {
+        name: true,
+      },
+    });
+
+    // Record the audit log
+    if (admin) {
+      try {
+        await createLog({
+          action: "UPDATE_STOCK",
+          adminId: req.user!.userId,
+          adminName: admin.name,
+          entityType: "PRODUCT",
+          entityId: product.id,
+          entityName: product.name,
+          details: {
+            oldStock: currentProduct.stock,
+            newStock: product.stock,
+          },
+        });
+      } catch (auditError) {
+        console.error("Failed to create stock audit log:", auditError);
+      }
+    }
+
+    return res.json({
       product,
       message: "Stock updated successfully",
     });
@@ -58,8 +106,11 @@ export async function updateStock(
 
     console.error("Failed to update stock:", error);
 
-    res.status(500).json({
+    return res.status(500).json({
       message: "Failed to update stock",
     });
   }
 }
+
+
+//GET /api/inventory -after successfull authentication, authorization

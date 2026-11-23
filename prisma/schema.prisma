@@ -28,6 +28,7 @@ model User {
 
   wishlist Wishlist[]
   cartItems CartItem[]
+  auditLogs AuditLog[]
 }
 
 model Product {
@@ -90,4 +91,23 @@ model CartItem {
   @@unique([userId, productId])
   @@index([userId])
   @@index([productId])
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  action     String
+  adminId    String?
+  adminName  String
+  entityType String
+  entityId   String?
+  entityName String
+  details    Json?
+  createdAt  DateTime @default(now())
+
+  admin User? @relation(fields: [adminId], references: [id], onDelete: SetNull)
+
+  @@index([adminId])
+  @@index([action])
+  @@index([entityType, entityId])
+  @@index([createdAt])
 }

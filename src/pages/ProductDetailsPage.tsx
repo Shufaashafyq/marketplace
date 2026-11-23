@@ -8,21 +8,18 @@ import { CATEGORIES } from "../lib/categories";
 import { useWishlist } from "../context/WishlistContext";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
-import {  formatMVRSymbol, formatMVRAmount } from "../lib/formatCurrency";
+import { formatMVRSymbol, formatMVRAmount } from "../lib/formatCurrency";
 
 function ProductDetailsPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [filterOpen, setFilterOpen] = useState(false);
-
   const { isProductLiked, toggleWishlist } = useWishlist();
   const { addItem } = useCart();
   const { user } = useAuth();
-
   const isFavorite = product ? isProductLiked(product.id) : false;
 
   useEffect(() => {
@@ -111,7 +108,14 @@ function ProductDetailsPage() {
       product.images[0];
 
     return (
-      <main className="min-h-screen bg-[#F8F8F7] px-4 py-6 sm:px-8 lg:py-12">
+      <main className="relative min-h-screen bg-[#F8F8F7] px-4 py-6 sm:px-8 lg:py-12">
+        <img
+        src="/images/illustrations/florals.png"
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute right-3 top-24 z-0 w-28 opacity-80 sm:w-32 lg:w-44"
+      />
+
         <div className="mx-auto max-w-6xl">
           <button
             type="button"
@@ -122,17 +126,17 @@ function ProductDetailsPage() {
             Back to gifts
           </button>
 
-          <div className="grid gap-6 md:grid-cols-2 md:items-center lg:gap-16">
+          <div className="grid items-start gap-6 md:grid-cols-2 lg:gap-16">
             {/* Product Image */}
-            <div className="relative overflow-hidden rounded-xl bg-[#F3EDF5] sm:rounded-2xl">
+            <div className="relative mx-auto aspect-square w-full max-w-130 overflow-hidden bg-[#F3EDF5]">
               {primaryImage ? (
                 <img
                   src={primaryImage.url}
                   alt={product.name}
-                  className="aspect-square h-full w-full object-cover"
+                  className="h-full w-full object-cover"
                 />
               ) : (
-                <div className="flex aspect-square items-center justify-center">
+                <div className="flex h-full w-full items-center justify-center">
                   <span className="text-sm text-[#A290B7]">
                     No image
                   </span>
@@ -141,7 +145,7 @@ function ProductDetailsPage() {
             </div>
 
             {/* Product Info */}
-            <div className="w-full">
+            <div className="flex w-full flex-col md:min-h-full">
               <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#A290B7]">
                 {product.category}
               </p>
@@ -153,31 +157,29 @@ function ProductDetailsPage() {
                 {product.name}
               </h1>
 
-              <p className="mt-5 flex flex-wrap items-baseline gap-1.5">
-                <span className="text-[15px] italic font-medium text-emerald-700/65 sm:text-[16px]">
+              <p className="mt-1.5 flex flex-wrap items-baseline gap-1.5">
+                <span className="text-[15px] italic font-medium text-emerald-700/65 sm:text-[18px]">
                   {formatMVRSymbol(product.price)}
                 </span>
 
-                <span className="text-[14px] font-semibold text-[#560319] tabular-nums sm:text-[15px]">
+                <span className="text-[14px] font-semibold text-[#560319] tabular-nums sm:text-[20px]">
                   {formatMVRAmount(product.price)}
                 </span>
               </p>
 
-              <div className="my-6 h-px bg-[#E8DCEB] sm:my-7" />
+              {/* Description */}
+              <div className="mt-12">
+                <h2 className="mb-3 text-sm font-semibold uppercase tracking-[0.12em] text-[#560319]">
+                  Description
+                </h2>
 
-              <p className="text-sm leading-6 text-[#6F6666] sm:leading-7">
-                {product.description}
-              </p>
-
-              {/* Stock */}
-              <p className="mt-5 text-xs text-[#946D6D]">
-                {product.stock > 0
-                  ? `${product.stock} available`
-                  : "Out of stock"}
-              </p>
+                <p className=" whitespace-pre-line text-sm leading-7 text-[#6F6666]">
+                  {product.description}
+                </p>
+              </div>
 
               {/* Actions */}
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <div className="mt-auto flex flex-col gap-3 pt-8 sm:flex-row sm:items-start">
                 <button
                   type="button"
                   onClick={handleToggleWishlist}
@@ -196,20 +198,28 @@ function ProductDetailsPage() {
                   />
                 </button>
 
-                <button
-                  type="button"
-                  onClick={handleAddToCart}
-                  disabled={product.stock === 0}
-                  className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#560319] px-6 text-sm font-medium text-[#FDF4D2] transition-all duration-200 hover:bg-[#6D0825] hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50 sm:flex-1"
-                >
-                  <ShoppingCart
-                    size={18}
-                    strokeWidth={1.8}
-                  />
-                  {product.stock > 0
-                    ? "Add to cart"
-                    : "Out of stock"}
-                </button>
+                <div className="flex flex-col items-start gap-2">
+                  <button
+                    type="button"
+                    onClick={handleAddToCart}
+                    disabled={product.stock === 0}
+                    className="flex h-12 items-center justify-center gap-2 rounded-full bg-[#560319] px-8 text-sm font-medium text-[#FDF4D2] transition-all duration-200 hover:bg-[#6D0825] hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    <ShoppingCart
+                      size={18}
+                      strokeWidth={1.8}
+                    />
+                    {product.stock > 0
+                      ? "Add to cart"
+                      : "Out of stock"}
+                  </button>
+
+                  <p className="text-xs text-[#946D6D]">
+                    {product.stock > 0
+                      ? `${product.stock} available`
+                      : "Out of stock"}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -239,4 +249,3 @@ function ProductDetailsPage() {
 }
 
 export default ProductDetailsPage;
-

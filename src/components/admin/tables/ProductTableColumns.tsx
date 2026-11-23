@@ -1,7 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import type { Product } from "../../api/product.api";
-import ProductTableActions from "./ProductTableActions";
-import { formatMVR } from "../../lib/formatCurrency";
+import type { Product } from "../../../api/product.api";
+import ProductTableActions from "../ProductTableActions";
+import { formatMVR } from "../../../lib/formatCurrency";
 
 export function getProductTableColumns(
   onProductsChanged: () => void
@@ -102,33 +102,55 @@ export function getProductTableColumns(
   },
 
   {
-    id: "status",
-    header: "Status",
+  id: "status",
+  header: "Status",
 
-    accessorFn: (product) =>
-      product.stock > 0
-        ? "In stock"
-        : "Out of stock",
+  accessorFn: (product) =>
+    product.stock > 0
+      ? product.stock <= 5
+        ? "Low stock"
+        : "In stock"
+      : "Out of stock",
 
-    cell: ({ row }) => {
-      const stock = row.original.stock;
-      const isOutOfStock = stock === 0;
-      const isLowStock = stock > 0 && stock <= 5;
+  cell: ({ row }) => {
+    const stock = row.original.stock;
+    const isOutOfStock = stock === 0;
+    const isLowStock = stock > 0 && stock <= 5;
 
-      const config = isOutOfStock
-        ? { dot: "bg-red-400", pill: "bg-[#FBE8EC] text-[#8B1A1A]", label: "Out of stock" }
-        : isLowStock
-        ? { dot: "bg-amber-400", pill: "bg-[#FDF4D2] text-[#7A4A00]", label: "Low stock" }
-        : { dot: "bg-emerald-400", pill: "bg-[#EAF5ED] text-[#1E5C35]", label: "In stock" };
+    const config = isOutOfStock
+      ? {
+          dot: "bg-red-400",
+          pill: "bg-[#FBE8EC] text-[#8B1A1A]",
+          label: "Out of stock",
+          glow: "0 0 5px #F87171, 0 0 9px #F8717180",
+        }
+      : isLowStock
+      ? {
+          dot: "bg-amber-400",
+          pill: "bg-[#FDF4D2] text-[#7A4A00]",
+          label: "Low stock",
+          glow: "0 0 5px #FBBF24, 0 0 9px #FBBF2480",
+        }
+      : {
+          dot: "bg-emerald-400",
+          pill: "bg-[#EAF5ED] text-[#1E5C35]",
+          label: "In stock",
+          glow: "0 0 5px #34D399, 0 0 9px #34D39980",
+        };
 
-      return (
-        <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-semibold tracking-[0.06em] ${config.pill}`}>
-          <span className={`h-1.5 w-1.5 rounded-full ${config.dot}`} />
-          {config.label}
-        </span>
-      );
-    },
+    return (
+      <span
+        className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-semibold tracking-[0.06em] ${config.pill}`}
+      >
+        <span
+          className={`h-1.5 w-1.5 rounded-full ${config.dot}`}
+          style={{ boxShadow: config.glow }}
+        />
+        {config.label}
+      </span>
+    );
   },
+},
 
   {
     id: "actions",

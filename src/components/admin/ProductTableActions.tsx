@@ -5,9 +5,7 @@ import {
   Pencil,
   Trash2,
 } from "lucide-react";
-
 import { Button } from "../ui/button";
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,11 +13,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-
 import type { Product } from "../../api/product.api";
 import ViewProductDialog from "./dialogs/ViewProductDialog";
 import ProductFormDialog from "./dialogs/ProductFormDialog";
 import DeleteProductDialog from "./dialogs/DeleteProductDialog";
+
 
 type ProductTableActionsProps = {
   product: Product;

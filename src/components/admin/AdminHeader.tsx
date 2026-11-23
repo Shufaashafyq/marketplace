@@ -9,10 +9,10 @@ function AdminHeader() {
 
   return (
     <header className="bg-[#560319]">
-      <div className="mx-auto flex flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+      <div className="mx-auto flex items-center justify-between gap-3 px-4 py-3 sm:px-5">
         <div>
           <h1
-            className="text-2xl text-[#FDF4D2] sm:text-4xl"
+            className="text-xl text-[#FDF4D2] sm:text-4xl"
             style={{ fontFamily: "'Estonia', cursive" }}
           >
             The Art of Gift Giving

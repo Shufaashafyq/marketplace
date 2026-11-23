@@ -42,10 +42,10 @@ function ProductCard({ product }: ProductCardProps) {
     try {
       await toggleWishlist(product);
       if (isFavorite) {
-      toast.success(`${product.name} removed from wishlist`);
-    } else {
-      toast.success(`${product.name} added to wishlist`);
-    }
+        toast.success(`${product.name} removed from wishlist`);
+      } else {
+        toast.success(`${product.name} added to wishlist`);
+      }
     } catch (error) {
       console.error("Failed to toggle wishlist:", error);
       toast.error("Failed to update wishlist. Please try again.");
@@ -89,14 +89,15 @@ function ProductCard({ product }: ProductCardProps) {
         ease: "easeOut",
       }}
       className="
-        group relative overflow-hidden rounded-3xl
-        border border-white/70
-        bg-white/45
-        shadow-[0_8px_30px_rgba(86,3,25,0.06)]
+        group relative isolate overflow-hidden rounded-3xl
+        border border-white/80
+        bg-white/20
+        shadow-[0_8px_32px_rgba(86,3,25,0.10),inset_0_1px_1px_rgba(255,255,255,0.8)]
         backdrop-blur-2xl
-        transition-shadow duration-500
-        hover:bg-white/60
-        hover:shadow-[0_18px_45px_rgba(86,3,25,0.12)]
+        transition-all duration-500
+        hover:border-white
+        hover:bg-white/30
+        hover:shadow-[0_20px_50px_rgba(86,3,25,0.16),inset_0_1px_2px_rgba(255,255,255,0.9)]
       "
     >
       {/* Glass highlight */}
@@ -104,10 +105,22 @@ function ProductCard({ product }: ProductCardProps) {
         className="
           pointer-events-none absolute inset-0 z-0
           bg-linear-to-br
-          from-white/75
+          from-white/50
           via-white/10
-          to-[#E8DCEB]/25
+          to-transparent
           opacity-80
+        "
+      />
+
+      {/* Glass reflection */}
+      <div
+        className="
+          pointer-events-none absolute
+          -left-20 -top-24
+          h-52 w-52
+          rounded-full
+          bg-white/40
+          blur-3xl
         "
       />
 
@@ -115,10 +128,10 @@ function ProductCard({ product }: ProductCardProps) {
       <div
         className="
           pointer-events-none absolute
-          -right-12 -top-12
-          h-32 w-32
+          -right-16 -top-16
+          h-48 w-48
           rounded-full
-          bg-[#E8DCEB]/30
+          bg-white/30
           blur-3xl
         "
       />
@@ -248,17 +261,18 @@ function ProductCard({ product }: ProductCardProps) {
           {/* Product Name */}
           <h2
             className="
-              mt-1.5
+              mt-1
               cursor-pointer
-              text-2xl
+              text-lg
+              font-medium
               leading-snug
-              text-[#560319]
+              text-[#946D6D]
               transition-opacity
               hover:opacity-70
-              sm:text-4xl
+              sm:text-2xl
             "
             style={{
-              fontFamily: "'Estonia', cursive",
+              fontFamily: "'Signika', sans-serif",
             }}
             onClick={openProduct}
           >
@@ -271,14 +285,14 @@ function ProductCard({ product }: ProductCardProps) {
               <Banknote
                 size={14}
                 strokeWidth={1.8}
-                className="shrink-0 translate-y-px text-emerald-700/55 sm:h-4 sm:w-4"
+                className="shrink-0 translate-y-0.5 text-emerald-700/55 sm:h-4 sm:w-4"
               />
 
-              <span className="text-[13px] italic font-medium text-emerald-700/65 sm:text-[15px]">
+              <span className="-translate-y-0.5 text-[13px] italic font-medium text-emerald-700/65 sm:text-[15px]">
                 {formatMVRSymbol(product.price)}
               </span>
 
-              <span className="truncate text-[13px] font-semibold text-[#560319] tabular-nums sm:text-[15px]">
+              <span className="-translate-y-0.5 truncate text-[13px] font-semibold text-[#560319] tabular-nums sm:text-[15px]">
                 {formatMVRAmount(product.price)}
               </span>
             </div>
@@ -310,6 +324,10 @@ function ProductCard({ product }: ProductCardProps) {
                   className="sm:h-4.5 sm:w-4.5"
                 />
               </motion.button>
+
+              <span className="pointer-events-none absolute left-1/2 top-full z-10 mt-2 -translate-x-1/2 whitespace-nowrap rounded-md bg-[#FDF4D2] px-2.5 py-1.5 text-[10px] font-medium text-[#946D6D] opacity-0 shadow-sm transition-opacity duration-200 group-hover/cart:opacity-100">
+                Add to cart
+              </span>
             </div>
           </div>
         </div>
@@ -319,4 +337,3 @@ function ProductCard({ product }: ProductCardProps) {
 }
 
 export default ProductCard;
-

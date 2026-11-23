@@ -68,12 +68,13 @@ function WelcomeSection() {
 
   function handleViewProducts() {
     if (window.location.pathname === "/products") {
-    document
-      .getElementById("our-gifts")
-      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+      document
+        .getElementById("our-gifts")
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
 
-    return;
-  }
+      return;
+    }
+
     navigate("/products#our-gifts");
   }
 
@@ -485,6 +486,38 @@ function WelcomeSection() {
             forwards;
         }
 
+        /* illustration layout */
+
+        .marketplace-editorial__heading-row {
+          display: flex;
+          align-items: center;
+          gap: clamp(4px, 1vw, 14px);
+        }
+
+        .marketplace-editorial__heading-mask {
+          flex: 1;
+          min-width: 0;
+        }
+
+        .marketplace-editorial__flower {
+          display: block;
+          flex: 0 0 auto;
+
+          width: clamp(90px, 10vw, 145px);
+          height: auto;
+
+          object-fit: contain;
+
+          opacity: 0;
+
+          animation:
+            marketplace-copy-in
+            800ms
+            1s
+            cubic-bezier(0.16, 1, 0.3, 1)
+            forwards;
+        }
+
         .marketplace-editorial__description {
           max-width: 355px;
 
@@ -715,22 +748,31 @@ function WelcomeSection() {
           }
 
           .marketplace-editorial__main-image {
-            width: min(72%, 340px);
-            height: min(54vw, 300px);
+            position: relative;
+            top: auto;
+            left: auto;
 
-            margin: 18px 0 0 auto;
+            width: 100%;
+            height: min(60vw, 300px);
+
+            margin: 18px 0 0;
 
             border-radius: 24px;
           }
 
           .marketplace-editorial__intro {
+            position: relative;
+
+            top: auto;
+            left: auto;
+
             width: 100%;
 
-            margin-top: 22px;
-
+            margin-top: 20px;
             padding: 0;
-
-            display: block;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
           }
 
           .marketplace-editorial__eyebrow {
@@ -739,12 +781,18 @@ function WelcomeSection() {
 
           .marketplace-editorial__products-button {
             margin-top: 0;
+            align-self: flex-start;
           }
 
           .marketplace-editorial__side-panel {
-            width: min(100%, 360px);
+            position: relative;
 
-            margin-top: 22px;
+            top: auto;
+            left: auto;
+
+            width: 100%;
+
+            margin-top: 24px;
             margin-left: 0;
           }
 
@@ -762,6 +810,14 @@ function WelcomeSection() {
             font-size: clamp(36px, 10vw, 52px);
           }
 
+          .marketplace-editorial__heading-row {
+            gap: 4px;
+          }
+
+          .marketplace-editorial__flower {
+            width: clamp(75px, 23vw, 110px);
+          }
+
           .marketplace-editorial__description {
             max-width: none;
 
@@ -776,6 +832,13 @@ function WelcomeSection() {
           }
         }
 
+        @media (pointer: coarse) {
+          .marketplace-editorial__main-photo,
+          .marketplace-editorial__secondary-photo {
+            transform: none !important;
+          }
+        }
+
         @media (prefers-reduced-motion: reduce) {
           .marketplace-editorial__title-word,
           .marketplace-editorial__main-image,
@@ -783,7 +846,8 @@ function WelcomeSection() {
           .marketplace-editorial__intro > *,
           .marketplace-editorial__heading,
           .marketplace-editorial__description,
-          .marketplace-editorial__index {
+          .marketplace-editorial__index,
+          .marketplace-editorial__flower {
             animation-duration: 1ms !important;
             animation-delay: 0ms !important;
           }
@@ -845,7 +909,7 @@ function WelcomeSection() {
             <span>
               View
               <br />
-              Products 🠇 
+              Products 🠇
             </span>
           </button>
         </div>
@@ -880,14 +944,23 @@ function WelcomeSection() {
           </figure>
 
           <div className="marketplace-editorial__side-copy">
-            <div className="marketplace-editorial__heading-mask">
-              <h2 className="marketplace-editorial__heading">
-                Find something
-                <br />
-                special for
-                <br />
-                someone special.
-              </h2>
+            <div className="marketplace-editorial__heading-row">
+              <div className="marketplace-editorial__heading-mask">
+                <h2 className="marketplace-editorial__heading">
+                  Find something
+                  <br />
+                  special for
+                  <br />
+                  someone special.
+                </h2>
+              </div>
+
+              <img
+                className="marketplace-editorial__flower"
+                src="/images/illustrations/flowers.png"
+                alt=""
+                aria-hidden="true"
+              />
             </div>
           </div>
         </aside>
@@ -897,4 +970,3 @@ function WelcomeSection() {
 }
 
 export default WelcomeSection;
-

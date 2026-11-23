@@ -123,7 +123,7 @@ function ViewProductDialog({
                 : `${product.stock} in stock`}
             </span>
 
-            <p className="text-sm leading-6 text-[#6F6666]">
+            <p className="whitespace-pre-line text-sm leading-6 text-[#6F6666]">
               {product.description}
             </p>
           </div>

@@ -64,7 +64,7 @@ function CartPage() {
       <DashboardHeader onFilterClick={handleFilterClick} />
 
       <main className="min-h-screen bg-linear-to-br from-[#F9F6FB] to-[#F3EDF5]">
-        <div className="mx-auto max-w-6xl px-4 py-8 sm:px-5 sm:py-12">
+        <div className="mx-auto max-w-6xl px-4 py-4 sm:px-5 sm:py-5">
           <button
             type="button"
             onClick={() => navigate("/products#our-gifts")}
@@ -81,7 +81,10 @@ function CartPage() {
               className="text-[#560319] sm:h-8 sm:w-8"
             />
 
-            <h1 className="text-3xl font-bold text-[#560319] sm:text-4xl">
+            <h1
+              className="text-4xl font-bold text-[#560319] sm:text-6xl"
+              style={{ fontFamily: "'Estonia', cursive" }}
+            >
               Shopping Cart
             </h1>
           </div>
@@ -131,7 +134,8 @@ function CartPage() {
                     return (
                       <div
                         key={item.id}
-                        className="flex flex-col gap-4 rounded-xl border border-[#E8DCEB]/80 bg-white/70 p-3 backdrop-blur-xl sm:flex-row sm:p-4"
+                        className="flex flex-col gap-4 rounded-xl border border-[#E8DCEB]/70 bg-white/70 p-3 shadow-[0_4px_14px_rgba(86,3,25,0.06)] transition-shadow duration-200 hover:shadow-[0_6px_18px_rgba(86,3,25,0.10)] sm:flex-row sm:p-4"
+
                       >
                         {/* Product Image */}
                         <div className="h-24 w-24 shrink-0 overflow-hidden rounded-lg bg-[#F3EDF5]">
@@ -155,7 +159,7 @@ function CartPage() {
                               {item.product.name}
                             </h3>
 
-                            <p className="text-sm text-[#A290B7]">
+                            <p className="text-sm text-[#946D6D]">
                               {item.product.category}
                             </p>
                           </div>
@@ -167,10 +171,12 @@ function CartPage() {
                                 strokeWidth={1.8}
                                 className="shrink-0 translate-y-px text-emerald-700/55"
                               />
-                              <span className="text-[15px] italic font-medium text-emerald-700/65">
+
+                              <span className="text-[15px] font-medium italic text-emerald-700/65">
                                 {formatMVRSymbol(item.product.price)}
                               </span>
-                              <span className="text-[15px] font-semibold text-[#560319] tabular-nums">
+
+                              <span className="text-[15px] font-semibold tabular-nums text-[#560319]">
                                 {formatMVRAmount(item.product.price)}
                               </span>
                             </div>
@@ -228,11 +234,17 @@ function CartPage() {
                               strokeWidth={1.8}
                               className="shrink-0 translate-y-px text-emerald-700/55"
                             />
-                            <span className="text-[15px] italic font-medium text-emerald-700/65">
-                              {formatMVRSymbol(Number(item.product.price) * item.quantity)}
+
+                            <span className="text-[15px] font-medium italic text-emerald-700/65">
+                              {formatMVRSymbol(
+                                Number(item.product.price) * item.quantity
+                              )}
                             </span>
-                            <span className="text-[15px] font-semibold text-[#560319] tabular-nums">
-                              {formatMVRAmount(Number(item.product.price) * item.quantity)}
+
+                            <span className="text-[15px] font-semibold tabular-nums text-[#560319]">
+                              {formatMVRAmount(
+                                Number(item.product.price) * item.quantity
+                              )}
                             </span>
                           </div>
 
@@ -248,36 +260,44 @@ function CartPage() {
 
               {/* Order Summary */}
               <div className="lg:col-span-1">
-                <div className="sticky top-24 rounded-xl border border-[#E8DCEB]/80 bg-white/70 p-4 backdrop-blur-xl sm:p-6">
-                  <h2 className="mb-5 text-xl font-semibold text-[#560319] sm:mb-6">
+                <div
+                  className="sticky top-16 -mt-20 overflow-hidden rounded-sm border border-[#E8DCEB]/80 p-4 shadow-[0_4px_14px_rgba(86,3,25,0.06)] backdrop-blur-xl sm:p-6"
+                  style={{
+                    backgroundImage: `url("/images/water.jpg")`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
+                >
+                  <h2 className=" -mt-2 mb-5 text-6xl font-semibold text-[#FDF4D2] sm:mb-6"
+                  style={{ fontFamily: "'Estonia', cursive" }}>
                     Order Summary
                   </h2>
 
                   <div className="space-y-4">
-                    <div className="flex justify-between text-[#946D6D]">
+                    <div className="flex justify-between font-medium text-[#FDF4D2]">
                       <span>Subtotal</span>
                       <span>{formatMVR(subtotal)}</span>
                     </div>
 
-                    <div className="flex justify-between text-[#946D6D]">
+                    <div className="flex justify-between font-medium text-[#FDF4D2]">
                       <span>Shipping</span>
                       <span>Free</span>
                     </div>
 
-                    <div className="flex justify-between text-[#946D6D]">
+                    <div className="flex justify-between text-sm text-[#FDF4D2]/85">
                       <span>Tax</span>
                       <span>Calculated at checkout</span>
                     </div>
 
-                    <div className="border-t border-[#E8DCEB] pt-4">
-                      <div className="mb-6 flex justify-between text-lg font-semibold text-[#560319]">
+                    <div className="border-t border-[#FDF4D2]/40 pt-4">
+                      <div className="mb-6 flex justify-between text-lg font-semibold text-[#FDF4D2]">
                         <span>Total</span>
                         <span>{formatMVR(subtotal)}</span>
                       </div>
 
                       <button
                         type="button"
-                        className="mb-3 w-full rounded-lg bg-[#560319] px-4 py-3 font-semibold text-[#FDF4D2] transition-opacity hover:opacity-80"
+                        className="mb-3 w-full rounded-lg bg-[#FDF4D2] px-4 py-3 font-semibold text-[#560319] transition-colors hover:bg-white"
                       >
                         Proceed to Checkout
                       </button>
@@ -285,7 +305,7 @@ function CartPage() {
                       <button
                         type="button"
                         onClick={() => setClearCartOpen(true)}
-                        className="w-full rounded-lg px-4 py-3 font-semibold text-[#946D6D] transition-opacity hover:text-red-600"
+                        className="w-full rounded-lg border border-[#FDF4D2]/60 bg-[#560319]/70 px-4 py-3 font-semibold text-[#FDF4D2] transition-colors hover:bg-[#560319]"
                       >
                         Clear Cart
                       </button>
