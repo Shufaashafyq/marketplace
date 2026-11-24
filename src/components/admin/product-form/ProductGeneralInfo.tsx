@@ -1,6 +1,7 @@
 import { Input } from "../../ui/input";
 import { Label } from "../../ui/label";
-import { Textarea } from "../../ui/textarea";
+//import { Textarea } from "../../ui/textarea";
+import ProductDescriptionEditor from "./ProdDescriptionEditor";
 
 type ProductGeneralInfoProps = {
   name: string;
@@ -91,24 +92,13 @@ function ProductGeneralInfo({
             Description
           </Label>
 
-          <Textarea
-            id="product-description"
-            value={description}
-            onChange={(event) =>
-              onDescriptionChange(event.target.value)
-            }
-            onBlur={onDescriptionBlur}
-            placeholder="Describe the product..."
-            rows={4}
-            disabled={loading}
-            required
-            aria-invalid={!!descriptionError}
-            className={`resize-none border-[#E8DCEB] bg-white focus-visible:ring-[#F3EAF5] ${
-              descriptionError
-                ? "border-[#C84B5E] focus-visible:border-[#C84B5E] focus-visible:ring-[#C84B5E]"
-                : ""
-            }`}
-          />
+          <ProductDescriptionEditor
+  value={description}
+  onChange={onDescriptionChange}
+  onBlur={onDescriptionBlur}
+  disabled={loading}
+  error={!!descriptionError}
+/>
 
           {descriptionError && (
             <p className="text-xs text-[#C84B5E]">

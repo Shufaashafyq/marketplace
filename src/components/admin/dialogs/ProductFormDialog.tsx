@@ -287,10 +287,7 @@ function ProductFormDialog({
         name.trim()
       );
 
-      formData.append(
-        "description",
-        description.trim()
-      );
+      formData.append("description", description);
 
       formData.append("price", price);
       formData.append("stock", stock);

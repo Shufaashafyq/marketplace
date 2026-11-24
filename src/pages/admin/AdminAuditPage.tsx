@@ -102,7 +102,7 @@ function AdminAuditPage() {
   const pageCount = table.getPageCount();
 
   return (
-    <main className="min-h-screen bg-[#F8F8F7] px-5 pb-12 pt-4 sm:pt-8">
+    <main className="min-h-screen bg-[#F8F8F7] px-5 pb-12 pt-4 sm:pt-6">
       <div className="mx-auto max-w-6xl space-y-8">
         {/* Page Heading */}
         <div>
